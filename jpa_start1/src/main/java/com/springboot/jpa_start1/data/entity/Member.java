@@ -22,8 +22,10 @@ public class Member {
 	
 	    @Id
 	    @Column(name = "member_id")
+	    @SequenceGenerator(sequenceName =  "member_seq", 	allocationSize = 1)
+	    // 쓰기 지연 학습에 사용
+		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq")
 		//@GeneratedValue(strategy = GenerationType.IDENTITY) // persist 시점에 바로 insert 발생
-		@GeneratedValue(strategy = GenerationType.SEQUENCE) // 쓰기 지연 학습에 사용
 	    private Integer id;
 	
 	    @Column(name = "member_name")
