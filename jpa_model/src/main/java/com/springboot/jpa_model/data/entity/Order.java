@@ -1,6 +1,8 @@
 package com.springboot.jpa_model.data.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +11,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -30,15 +35,19 @@ public class Order {
 	    @SequenceGenerator(sequenceName =  "order_seq", 	allocationSize = 1)
 		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
 	    private Long id;
-	
-	    @Column(name = "MEMBER_ID", nullable = false)
-	    private Long memberId;
+
+	    @ManyToOne
+	    @JoinColumn(name = "MEMBER_ID")
+	    private Member member;
+
+	    @OneToMany(mappedBy = "order")
+	    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 	
 	    @Column(name = "ORDER_DATE", nullable = false)
 	    private Date orderDate;     //주문시간
 	
 	    @Enumerated(EnumType.STRING)
 	    @Column(name = "ORDER_STATUS", nullable = false)
-	    private OrderStatus status; //주문상태
+	    private OrderStatus orderStatus; //주문상태
 	
 }

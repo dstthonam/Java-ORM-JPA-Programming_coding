@@ -1,10 +1,14 @@
 package com.springboot.jpa_model.data.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -28,7 +32,7 @@ public class Member {
 	    private Long id;
 
 	    @Column(name = "MEMEBER_NAME", nullable = false)
-	    private String name;
+	    private String username;
 
 	    @Column(name = "MEMEBER_CITY")
 	    private String city;
@@ -38,5 +42,7 @@ public class Member {
 
 	    @Column(name = "MEMEBER_ZIPCODE")
 	    private String zipcode;
-	
+
+	    @OneToMany(mappedBy = "member")
+	    private List<Order> orders = new ArrayList<Order>();
 }

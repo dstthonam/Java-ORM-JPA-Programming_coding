@@ -20,12 +20,14 @@ public class OrderItem {
 	    @SequenceGenerator(sequenceName =  "order_item_seq", 	allocationSize = 1)
 		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_item_seq")
 	    private Long id;
-	
-	    @Column(name = "ITEM_ID")
-	    private Long itemId;
+
+	    @ManyToOne
+	    @JoinColumn(name = "ITEM_ID")
+	    private Item item;
 	    
-	    @Column(name = "ORDER_ID")
-	    private Long orderId;
+	    @ManyToOne
+	    @JoinColumn(name = "ORDER_ID")
+	    private Order order;
 
 	    @Column(name = "ORDER_PRICE", nullable = false)
 	    private int orderPrice; //주문 가격
