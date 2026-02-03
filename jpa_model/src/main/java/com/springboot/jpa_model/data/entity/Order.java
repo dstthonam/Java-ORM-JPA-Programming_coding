@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -43,11 +44,33 @@ public class Order {
 	    @OneToMany(mappedBy = "order")
 	    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 	
+	    @OneToOne
+	    @JoinColumn(name = "DELIVERY_ID")
+	    private Deliveries deliveries;
+	    
 	    @Column(name = "ORDER_DATE", nullable = false)
 	    private Date orderDate;     //주문시간
 	
 	    @Enumerated(EnumType.STRING)
 	    @Column(name = "ORDER_STATUS", nullable = false)
 	    private OrderStatus orderStatus; //주문상태
+	    
+	    public void setMember(Member member) {
+	        if (this.member != null) { //기존 관계 제거
+	            this.member.getOrders().remove(this);
+	        }
+	        
+	        this.member = member;
+	        member.getOrders().add(this); // 객체 상태 일치화
+	    }
 	
+	    public void addOrderItem(OrderItem orderItem) {
+	        orderItems.add(orderItem); // 객체 상태 일치화
+	        orderItem.setOrder(this);
+	    }
+
+	    public void setDelivery(Deliveries deliveries) {
+	        this.deliveries = deliveries;
+	        deliveries.setOrder(this); // 객체 상태 일치화
+	    }
 }

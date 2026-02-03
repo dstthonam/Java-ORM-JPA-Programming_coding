@@ -1,10 +1,16 @@
 package com.springboot.jpa_model.data.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.annotations.ManyToAny;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -37,6 +43,9 @@ public class Item {
 	    @Column(name = "ITEM_QPA", nullable = false)
 	    private int stockQuantity;  //재고수량
 	
+	    @ManyToMany
+	    private List<Categories> categories = new ArrayList<Categories>();
+	    
 	    @Override
 	    public String toString() {
 	        return "Item{" +
