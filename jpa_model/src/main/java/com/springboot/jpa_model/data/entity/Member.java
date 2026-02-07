@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,11 +14,10 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
+//@Setter
 @Table(name = "MEMBERS",
 				uniqueConstraints = {@UniqueConstraint(
 						name = "NAME_UNIQUE",
@@ -31,18 +31,29 @@ public class Member {
 		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq")
 	    private Long id;
 
-	    @Column(name = "MEMEBER_NAME", nullable = false)
+	    @Column(name = "MEMBER_NAME", nullable = false)
 	    private String username;
 
-	    @Column(name = "MEMEBER_CITY")
+	    @Column(name = "MEMBER_CITY")
 	    private String city;
 	    
-	    @Column(name = "MEMEBER_STREET")
+	    @Column(name = "MEMBER_STREET")
 	    private String street;
 
-	    @Column(name = "MEMEBER_ZIPCODE")
+	    @Column(name = "MEMBER_ZIPCODE")
 	    private String zipcode;
 
-	    @OneToMany(mappedBy = "member")
+	    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
 	    private List<Order> orders = new ArrayList<Order>();
+	    
+	    public static Member createMember(String username, String city, String street,  String zipcode) {
+	        Member member = new Member();
+	        
+	        member.username = username;
+	        member.city = city;
+	        member.street = street;
+	        member.zipcode = zipcode;
+	        
+	        return member;
+	    }
 }

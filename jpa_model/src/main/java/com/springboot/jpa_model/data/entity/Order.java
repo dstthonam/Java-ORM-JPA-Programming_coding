@@ -19,11 +19,10 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
+//@Setter
 @Table(name = "ORDERS",
 				uniqueConstraints = {@UniqueConstraint(
 						name = "DATE_STATUS_UNIQUE",
@@ -43,11 +42,11 @@ public class Order {
 
 	    @OneToMany(mappedBy = "order")
 	    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
-	
+	    
 	    @OneToOne
 	    @JoinColumn(name = "DELIVERY_ID")
-	    private Deliveries deliveries;
-	    
+	    private Delivery delivery;
+
 	    @Column(name = "ORDER_DATE", nullable = false)
 	    private Date orderDate;     //주문시간
 	
@@ -55,7 +54,23 @@ public class Order {
 	    @Column(name = "ORDER_STATUS", nullable = false)
 	    private OrderStatus orderStatus; //주문상태
 	    
-	    public void setMember(Member member) {
+	    // Setter
+	    public static Order createOrder(Member member, Delivery delivery, List<OrderItem> orderItems, Date orderDate) {
+	        Order order = new Order();
+	        
+	        order.changeMember(member);
+	        order.assignDelivery(delivery);
+	        order.orderStatus = OrderStatus.ORDER;
+	        order.orderDate = orderDate;
+
+	        for (OrderItem orderItem : orderItems) {
+	            order.addOrderItem(orderItem);
+	        }
+
+	        return order;
+	    }
+	    
+	    public void changeMember(Member member) {
 	        if (this.member != null) { //기존 관계 제거
 	            this.member.getOrders().remove(this);
 	        }
@@ -69,8 +84,17 @@ public class Order {
 	        orderItem.setOrder(this);
 	    }
 
-	    public void setDelivery(Deliveries deliveries) {
-	        this.deliveries = deliveries;
-	        deliveries.setOrder(this); // 객체 상태 일치화
+	    public void assignDelivery(Delivery delivery) {
+	        this.delivery = delivery;
+	        delivery.setOrder(this); // 객체 상태 일치화
+	    }
+
+	    @Override
+	    public String toString() {
+	        return "Order{" +
+	                "id=" + id +
+	                ", orderDate=" + orderDate +
+	                ", status=" + orderStatus +
+	                '}';
 	    }
 }

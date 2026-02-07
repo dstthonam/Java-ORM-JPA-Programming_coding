@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -22,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 //@ToString
-@Table(name = "CATEGORIES",
+@Table(name = "CATEGORY",
 				uniqueConstraints = {@UniqueConstraint(
 						name = "CATEGORY_UNIQUE",
 						columnNames = {"ITEM_NAME", "ITEM_PRICE", "ITEM_QPA"} )
@@ -41,8 +42,30 @@ public class Category {
 	    @JoinTable(name = "CATEGORY_ITEM",
 	    			joinColumns = @JoinColumn(name = "CATEGORY_ID"),
 	    			inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
-		private List<Item> items = ArrayList<Item>();
-		
-		private Category
+		private List<Item> items = new ArrayList<Item>();
 
+	    @ManyToOne
+	    @JoinColumn(name = "PARENT_ID")
+	    private Category parent;
+
+	    @OneToMany(mappedBy = "parent")
+	    private List<Category> child = new ArrayList<Category>();
+
+	    //==연관관계 메서드==//
+	    public void addChildCategory(Category child) {
+	        this.child.add(child);
+	        child.setParent(this);
+	    }
+
+	    public void addItem(Item item) {
+	        items.add(item);
+	    }
+
+	    @Override
+	    public String toString() {
+	        return "Category{" +
+	                "id=" + id +
+	                ", name='" + category_name + '\'' +
+	                '}';
+	    }
 }

@@ -22,7 +22,7 @@ import lombok.Setter;
 				name = "ITEM_NAME_PRICE_QPA_UNIQUE",
 				columnNames = {"ITEM_NAME", "ITEM_PRICE", "ITEM_QPA"} )
 		})
-public class Deliveries {
+public class Delivery {
 
 	    @Id
 	    @Column(name = "DELIVERY_ID")
@@ -30,7 +30,7 @@ public class Deliveries {
 		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Delivery_seq")
 		private Long id;
 		
-	    @OneToOne(mappedBy = "deliveries")
+	    @OneToOne(mappedBy = "delivery")
 		private Order order;
 		
 		private String city;
