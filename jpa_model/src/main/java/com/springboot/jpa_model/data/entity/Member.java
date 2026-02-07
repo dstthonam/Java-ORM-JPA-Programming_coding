@@ -23,7 +23,7 @@ import lombok.Getter;
 						name = "NAME_UNIQUE",
 						columnNames = {"MEMBER_NAME"} )
 				})
-public class Member {
+public class Member extends BaseEntity {
 	
 	    @Id
 	    @Column(name = "MEMBER_ID")

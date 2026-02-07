@@ -28,7 +28,7 @@ import lombok.Getter;
 						name = "DATE_STATUS_UNIQUE",
 						columnNames = {"MEMBER_ID", "ORDER_DATE", "ORDER_STATUS"} )
 				})
-public class Order {
+public class Order extends BaseEntity {
 	
 	    @Id
 	    @Column(name = "ORDER_ID")

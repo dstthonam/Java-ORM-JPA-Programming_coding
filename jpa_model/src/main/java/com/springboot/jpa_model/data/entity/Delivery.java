@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "DELIVERIES",
+@Table(name = "DELIVERY",
 		uniqueConstraints = {@UniqueConstraint(
 				name = "ITEM_NAME_PRICE_QPA_UNIQUE",
 				columnNames = {"ITEM_NAME", "ITEM_PRICE", "ITEM_QPA"} )

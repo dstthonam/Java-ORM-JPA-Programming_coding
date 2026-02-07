@@ -1,5 +1,7 @@
 package com.springboot.jpa_model.data.entity;
 
+import com.springboot.jpa_model.data.entity.item.Item;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

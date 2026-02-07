@@ -1,13 +1,18 @@
-package com.springboot.jpa_model.data.entity;
+package com.springboot.jpa_model.data.entity.item;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.springboot.jpa_model.data.entity.Category;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -17,12 +22,14 @@ import lombok.Getter;
 @Entity
 @Getter
 //@Setter
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "DTYPE")
 @Table(name = "ITEMS",
 				uniqueConstraints = {@UniqueConstraint(
 						name = "ITEM_NAME_PRICE_QPA_UNIQUE",
 						columnNames = {"ITEM_NAME", "ITEM_PRICE", "ITEM_QPA"} )
 				})
-public class Item {
+public abstract class Item {
 	
 	    @Id
 	    @Column(name = "ITEM_ID")
@@ -41,7 +48,7 @@ public class Item {
 	
 	    @ManyToMany(mappedBy = "items")
 	    private List<Category> categories = new ArrayList<Category>();
-	    
+
 	    // Setter
 	    public Item(String name, int price, int stockQuantity) {
 	        this.name = name;
