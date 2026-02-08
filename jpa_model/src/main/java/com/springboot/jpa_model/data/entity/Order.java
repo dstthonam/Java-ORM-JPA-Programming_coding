@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,14 +38,14 @@ public class Order extends BaseEntity {
 		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
 	    private Long id;
 
-	    @ManyToOne
+	    @ManyToOne(fetch = FetchType.LAZY)
 	    @JoinColumn(name = "MEMBER_ID")
 	    private Member member;
 
-	    @OneToMany(mappedBy = "order")
+	    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 	    
-	    @OneToOne
+	    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	    @JoinColumn(name = "DELIVERY_ID")
 	    private Delivery delivery;
 
