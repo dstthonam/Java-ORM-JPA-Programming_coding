@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,15 +35,9 @@ public class Member extends BaseEntity {
 	    @Column(name = "MEMBER_NAME", nullable = false)
 	    private String username;
 
-	    @Column(name = "MEMBER_CITY")
-	    private String city;
+	    @Embedded
+	    private Address address;
 	    
-	    @Column(name = "MEMBER_STREET")
-	    private String street;
-
-	    @Column(name = "MEMBER_ZIPCODE")
-	    private String zipcode;
-
 	    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
 	    private List<Order> orders = new ArrayList<Order>();
 	    
@@ -50,9 +45,7 @@ public class Member extends BaseEntity {
 	        Member member = new Member();
 	        
 	        member.username = username;
-	        member.city = city;
-	        member.street = street;
-	        member.zipcode = zipcode;
+	        member.address = new Address(city, street, zipcode);
 	        
 	        return member;
 	    }
