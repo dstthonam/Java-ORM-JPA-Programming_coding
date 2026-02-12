@@ -2,6 +2,7 @@ package com.springboot.jpa_prac;
 
 import static org.mockito.Mockito.ignoreStubs;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -104,6 +105,7 @@ public class Jpql_01 {
 		*/
 
 		// Entity Projection 사용 : 엔티티로 조회 쿼리 컬럼 설정
+		/**
 		@Test
 		void Entity_Project_test() {
 			em.persist(Member.createMember("thonam", "busan", "marine 1 street", "91"));
@@ -123,5 +125,31 @@ public class Jpql_01 {
 			resultList.forEach(m -> System.out.println("Adress : " + m.toString()));
 			
 		}
-		 
+		 */
+		
+		// Entity Projection 사용 : 엔티티로 조회 쿼리 컬럼 설정
+		@Test
+		void iterator_project_test() {
+			em.persist(Member.createMember("thonam", "busan", "marine 1 street", "91"));
+			em.flush();
+			em.clear();
+			
+			// when
+			Query query = em.createQuery("SELECT m.username, m.address FROM Member m");
+			
+			List resultList = query.getResultList();
+			
+			Iterator iterator = resultList.iterator();
+
+			// then
+			while (iterator.hasNext()) {
+				Object[] row = (Object[]) iterator.next();
+				String username = (String) row[0];
+				Address address = (Address) row[1];
+				
+				System.out.println("Username : " + username);
+				System.out.println("address : " + address);
+			}
+			
+		}
 }
