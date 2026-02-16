@@ -1,7 +1,5 @@
 package com.springboot.jpa_prac;
 
-import static org.mockito.Mockito.ignoreStubs;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,14 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.springboot.jpa_prac.data.entity.Address;
 import com.springboot.jpa_prac.data.entity.Member;
-import com.springboot.jpa_prac.data.entity.Order;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
-import lombok.experimental.var;
 
 @SpringBootTest
 @Transactional

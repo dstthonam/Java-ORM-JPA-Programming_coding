@@ -10,6 +10,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -26,6 +28,14 @@ import lombok.NoArgsConstructor;
 						name = "NAME_UNIQUE",
 						columnNames = {"MEMBER_NAME"} )
 				})
+@NamedQueries({
+		@NamedQuery(
+				name = "Member.findByUsername",
+				query = "select m from Member m where m.username = :username"),
+		@NamedQuery(
+				name = "Member.count",
+				query = "select count(m) from Member m")
+})
 public class Member extends BaseEntity {
 	
 	    @Id
@@ -60,4 +70,5 @@ public class Member extends BaseEntity {
 	                ", adress = " + address +
 	                '}';
 	    }
+	    
 }
