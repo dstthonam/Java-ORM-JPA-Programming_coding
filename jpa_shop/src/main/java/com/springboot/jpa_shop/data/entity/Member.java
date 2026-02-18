@@ -41,7 +41,7 @@ public class Member extends BaseEntity {
 	    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
 	    private List<Order> orders = new ArrayList<Order>();
 	    
-	    public static Member createMember(String username, String city, String street,  String zipcode) {
+	    public static Member changeMember(String username, String city, String street,  String zipcode) {
 	        Member member = new Member();
 	        
 	        member.username = username;
@@ -49,4 +49,5 @@ public class Member extends BaseEntity {
 	        
 	        return member;
 	    }
+	    
 }

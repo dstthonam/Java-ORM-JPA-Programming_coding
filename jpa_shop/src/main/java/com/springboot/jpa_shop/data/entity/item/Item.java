@@ -57,6 +57,11 @@ public abstract class Item {
 	    }
 	    
 	    // 재고 감소
+	    public void addStock(int quantity) {
+	        this.stockQuantity += quantity;
+	    }
+	    
+	    // 재고 감소
 	    public void removeStock(int quantity) {
 	        if (this.stockQuantity < quantity) {
 	            throw new IllegalStateException("재고 부족");
