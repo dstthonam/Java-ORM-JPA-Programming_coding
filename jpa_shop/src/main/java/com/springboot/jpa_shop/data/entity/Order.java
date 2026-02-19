@@ -24,7 +24,6 @@ import lombok.Getter;
 
 @Entity
 @Getter
-//@Setter
 @Table(name = "ORDERS",
 				uniqueConstraints = {@UniqueConstraint(
 						name = "DATE_STATUS_UNIQUE",
@@ -57,7 +56,7 @@ public class Order extends BaseEntity {
 	    private OrderStatus orderStatus; //주문상태
 	    
 	    // Setter
-	    public static Order createOrder(Member member, Delivery delivery, List<OrderItem> orderItems, Date orderDate) {
+	    public static Order createOrder(Member member, Delivery delivery, Date orderDate, OrderItem... orderItems) {
 	        Order order = new Order();
 	        
 	        order.changeMember(member);
@@ -80,7 +79,11 @@ public class Order extends BaseEntity {
 	        this.member = member;
 	        member.getOrders().add(this); // 객체 상태 일치화
 	    }
-	
+
+	    public void changeOrderStatus(OrderStatus orderStatus) {
+	        this.orderStatus = orderStatus;
+	    }
+	    
 	    public void addOrderItem(OrderItem orderItem) {
 	        orderItems.add(orderItem); // 객체 상태 일치화
 	        orderItem.setOrder(this);
@@ -91,6 +94,30 @@ public class Order extends BaseEntity {
 	        delivery.setOrder(this); // 객체 상태 일치화
 	    }
 
+	    // 주문 취소
+	    public void cancelOrder() {
+
+	        if (delivery.getStatus() == DeliveryStatus.COMP) {
+	            throw new RuntimeException("이미 배송완료된 상품은 취소가 불가능합니다.");
+	        }
+
+	        this.changeOrderStatus(OrderStatus.CANCEL);
+	        for (OrderItem orderItem : orderItems) {
+	            orderItem.cancelOrder();
+	        }
+	    }
+
+	    // 전체 주문 가격 조회
+	    public int getTotalPrice() {
+	        int totalPrice = 0;
+	        
+	        for (OrderItem orderItem : orderItems) {
+	            totalPrice += orderItem.getTotalPrice();
+	        }
+	        
+	        return totalPrice;
+	    }
+	    
 	    @Override
 	    public String toString() {
 	        return "Order{" +

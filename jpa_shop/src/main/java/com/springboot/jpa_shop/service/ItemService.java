@@ -1,17 +1,13 @@
-package jpabook.jpashop.service;
+package com.springboot.jpa_shop.service;
 
-import jpabook.jpashop.domain.item.Item;
-import jpabook.jpashop.repository.ItemRepository;
+import com.springboot.jpa_shop.data.entity.item.Item;
+import com.springboot.jpa_shop.data.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * User: HolyEyE
- * Date: 2013. 12. 3. Time: 오후 9:43
- */
 @Service
 @Transactional
 public class ItemService {
@@ -30,4 +26,5 @@ public class ItemService {
     public Item findOne(Long itemId) {
         return itemRepository.findOne(itemId);
     }
+    
 }

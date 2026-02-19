@@ -39,5 +39,16 @@ public class Delivery {
 	    
 		@Enumerated(EnumType.STRING)
 		private DeliveryStatus status;
+		
+	    // Setter
+	    public static Delivery createDelivery(Order order) {
+	    	Delivery delivery = new Delivery();
+	        
+	    	delivery.order = order;
+	    	delivery.address = order.getMember().getAddress();
+	    	delivery.status = DeliveryStatus.READY;
+	    	
+	    	return delivery;
+	    }
 	
 }

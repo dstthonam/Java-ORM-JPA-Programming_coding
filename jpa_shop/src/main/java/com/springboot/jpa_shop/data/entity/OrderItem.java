@@ -18,8 +18,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-//@Setter
-//@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ORDER_ITEMS")
 public class OrderItem {
@@ -60,7 +58,17 @@ public class OrderItem {
 	    public void setOrder(Order order) {
 	        this.order = order;
 	    }
-	    
+
+	    // 주문 취소
+	    public void cancelOrder() {
+	        getItem().addStock(count);
+	    }
+
+	    // 주문상품 전체 가격 조회
+	    public int getTotalPrice() {
+	        return getOrderPrice() * getCount();
+	    }
+
 	    @Override
 	    public String toString() {
 	        return "OrderItem{" +
