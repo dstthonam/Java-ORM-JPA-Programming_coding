@@ -20,16 +20,16 @@ import java.util.List;
 @Transactional
 public class OrderService {
 
-    private final JpaShopApplication jpaShopApplication;
+	    private final JpaShopApplication jpaShopApplication;
+		
+		    @Autowired MemberRepository memberRepository;
+		    @Autowired OrderRepository orderRepository;
+		    @Autowired ItemService itemService;
 	
-	    @Autowired MemberRepository memberRepository;
-	    @Autowired OrderRepository orderRepository;
-	    @Autowired ItemService itemService;
-
-    OrderService(JpaShopApplication jpaShopApplication) {
-        this.jpaShopApplication = jpaShopApplication;
-    }
-	
+	    OrderService(JpaShopApplication jpaShopApplication) {
+	        this.jpaShopApplication = jpaShopApplication;
+	    }
+		
 	    // 주문
 	    public Long order(Long memberId, Long itemId, int count, Date orderDate) {
 	

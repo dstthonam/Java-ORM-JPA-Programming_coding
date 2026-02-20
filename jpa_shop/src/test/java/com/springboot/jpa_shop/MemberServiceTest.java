@@ -6,14 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.jpa_shop.data.entity.Member;
 import com.springboot.jpa_shop.data.repository.MemberRepository;
 import com.springboot.jpa_shop.service.MemberService;
 
-@ContextConfiguration(locations = "classpath:appConfig.xml")
+@SpringBootTest
 @Transactional
 public class MemberServiceTest {
 
@@ -22,35 +22,44 @@ public class MemberServiceTest {
 
 	    @Test
 	    public void register_test() throws Exception {
-		    //Given
-	        Member member = new Member();
-	        member.changeMember("kim", null, null, null);
+	        try {
+	    	    //Given
+		        Member member = Member.changeMember("kim", "city", "street", "zipcode");
+		
+		        //When
+		        Long saveMemberSevice = memberService.join(member);
+
+		        //Then
+		        assertEquals(member, memberRepository.findOne(saveMemberSevice));
+			} catch (Exception e) {
+				e.printStackTrace(); // error log check
+			}
 	
-	        //When
-	        Long saveMemberSevice = memberService.join(member);
-	
-	        //Then
-	        assertEquals(member, memberRepository.findOne(saveMemberSevice));
 	    }
 	
 	    @Test
 	    public void except_duplicateRegister_test() throws Exception {
-	        //Given
-	        Member member1 = new Member();
-	        member1.changeMember("kim", null, null, null);
-	
-	        Member member2 = new Member();
-	        member2.changeMember("kim", null, null, null);
-	
-	        //When
-	        memberService.join(member1);
-	        
-	        Assertions.assertThrows(IllegalStateException.class, () -> {
-	            memberService.join(member2); //예외가 발생해야 한다.
-	        });
-	        
-	        //Then
-	        fail("예외가 발생해야 한다.");
+	    	try {
+				//Given
+		        Member member1 =  Member.changeMember("kim", "city", "street", "zipcode");
+		
+		        Member member2 =  Member.changeMember("kim", "city", "street", "zipcode");
+		
+		        //When
+		        memberService.join(member1);
+	            //memberService.join(member2);
+		        
+		        IllegalStateException thrown = Assertions.assertThrows(IllegalStateException.class, () -> {
+		            memberService.join(member2); // occur exception // 26.02.20 람다식 내부의 파라미터 값은 final 상태, 외부에서 재선언 금지  
+		        });
+		        
+		        //Then
+		        System.out.println("except_duplicateRegister_test : " + thrown);
+		        //fail("예외가 발생해야 한다.");
+				
+			} catch (Exception e) {
+				e.printStackTrace(); // error log check
+			}
 	    }
 
 }

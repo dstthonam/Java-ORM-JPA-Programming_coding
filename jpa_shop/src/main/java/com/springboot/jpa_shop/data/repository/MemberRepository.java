@@ -13,8 +13,8 @@ public class MemberRepository {
 	    @PersistenceContext
 	    EntityManager em;
 	
-	    public void save(Member member) {
-	        em.persist(member);
+	    public void save(Member saveMember) {
+	        em.persist(saveMember);
 	    }
 	
 	    public Member findOne(Long id) {
@@ -26,9 +26,9 @@ public class MemberRepository {
 	                .getResultList();
 	    }
 	
-	    public List<Member> findByName(String name) {
-	        return em.createQuery("select m from Member m where m.name = :name", Member.class)
-	                .setParameter("name", name)
+	    public List<Member> findByName(String username) {
+	        return em.createQuery("select m from Member m where m.username = :username", Member.class)
+	                .setParameter("username", username)
 	                .getResultList();
 	    }
 }
