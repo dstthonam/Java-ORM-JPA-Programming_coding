@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -22,9 +24,9 @@ public class OrderService {
 
 	    private final JpaShopApplication jpaShopApplication;
 		
-		    @Autowired MemberRepository memberRepository;
-		    @Autowired OrderRepository orderRepository;
-		    @Autowired ItemService itemService;
+	    @Autowired MemberRepository memberRepository;
+	    @Autowired OrderRepository orderRepository;
+	    @Autowired ItemService itemService;
 	
 	    OrderService(JpaShopApplication jpaShopApplication) {
 	        this.jpaShopApplication = jpaShopApplication;
@@ -32,35 +34,30 @@ public class OrderService {
 		
 	    // 주문
 	    public Long order(Long memberId, Long itemId, int count, Date orderDate) {
-	
-	        // 엔티티 조회
-	        Member member = memberRepository.findOne(memberId);
-	        Item item = itemService.findOne(itemId);
-	
-	        // 주문상품 생성
-	        OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count); 
-	        // 배송정보 생성
-	        //Delivery delivery = new Delivery(member.getAddress());
-	        //Delivery delivery = new Delivery();
-	        Delivery delivery = new Delivery();
-	        
-	        // 주문 생성
-	        Order order = Order.createOrder(member, delivery, orderDate, orderItem);
+	    	
+	    	if (orderDate == null) {
+	            LocalDate today = LocalDate.now(); // 오늘 날짜 구하기
+	            orderDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	        }
 
-	        // 주문 저장
-	        orderRepository.save(order);
+	        Member member = memberRepository.findOne(memberId); // 엔티티 조회
+	        Item item = itemService.findOne(itemId);
+	    	
+	        OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count); // 주문상품 생성
+	        Delivery delivery = new Delivery(); // 배송정보 생성
+	    	
+	        Order order = Order.createOrder(member, delivery, orderDate, orderItem);
 	        
+	        orderRepository.save(order);
+
 	        return order.getId();
 	    }
 	
 	    // 주문 취소
 	    public void cancelOrder(Long orderId) {
+	        Order order = orderRepository.findOne(orderId); //주문 엔티티 조회
 	
-	        //주문 엔티티 조회
-	        Order order = orderRepository.findOne(orderId);
-	
-	        //주문 취소
-	        order.cancelOrder();
+	        order.cancelOrder(); //주문 취소
 	    }
 	
 	    // 주문 검색

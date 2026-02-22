@@ -1,24 +1,28 @@
 package com.springboot.jpa_shop.data.repository;
 
-import com.springboot.jpa_shop.data.entity.Member;
-import com.springboot.jpa_shop.data.entity.Order;
-import com.springboot.jpa_shop.service.OrderSearch;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.springboot.jpa_shop.data.entity.Order;
+import com.springboot.jpa_shop.data.entity.OrderStatus;
+import com.springboot.jpa_shop.data.entity.QMember;
+import com.springboot.jpa_shop.data.entity.QOrder;
+import com.springboot.jpa_shop.service.OrderSearch;
+
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Repository
+@RequiredArgsConstructor
 public class OrderRepository {
-
-	    @PersistenceContext
-	    EntityManager em;
-	
+		
+	    private final EntityManager em;
+	    private final JPAQueryFactory queryFactory;
+	    
 	    public void save(Order order) {
 	        em.persist(order);
 	    }
@@ -26,30 +30,30 @@ public class OrderRepository {
 	    public Order findOne(Long id) {
 	        return em.find(Order.class, id);
 	    }
-	
-	    public List<Order> findAll(OrderSearch orderSearch) {
+	    
+	    public List<Order> findAll(OrderSearch search) {
+			
+			QOrder order = QOrder.order; // 기본 인스턴스
+	        QMember member = QMember.member;
 	    	
 	    	// JPQL로 수정 pis
-	        CriteriaBuilder cb = em.getCriteriaBuilder();
-	        CriteriaQuery<Order> cq = cb.createQuery(Order.class);
-	        Root<Order> o = cq.from(Order.class);
-	
-	        List<Predicate> criteria = new ArrayList<Predicate>();
-	
-	        //주문 상태 검색
-	        if (orderSearch.getOrderStatus() != null) {
-	            Predicate status = cb.equal(o.get("status"), orderSearch.getOrderStatus());
-	            criteria.add(status);
-	        }
-	        //회원 이름 검색
-	        if (StringUtils.hasText(orderSearch.getMemberName())) {
-	            Join<Order, Member> m = o.join("member", JoinType.INNER); //회원과 조인
-	            Predicate name = cb.like(m.<String>get("name"), "%" + orderSearch.getMemberName() + "%");
-	            criteria.add(name);
-	        }
-	
-	        cq.where(cb.and(criteria.toArray(new Predicate[criteria.size()])));
-	        TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000); //최대 검색 1000 건으로 제한
-	        return query.getResultList();
+	        return queryFactory
+			                .selectFrom(order)
+			                .join(order.member, member)
+			                .where(
+			                        statusEq(search.getOrderStatus()),
+			                        memberNameLike(search.getMemberName())
+			                )
+			                .limit(1000)
+			                .fetch();
 	    }
+
+	    private BooleanExpression statusEq(OrderStatus status) {
+	        return status != null ? QOrder.order.orderStatus.eq(status) : null;
+	    }
+
+	    private BooleanExpression memberNameLike(String name) {
+	        return StringUtils.hasText(name) ? QMember.member.username.like("%" + name + "%") : null;
+	    }
+
 }
