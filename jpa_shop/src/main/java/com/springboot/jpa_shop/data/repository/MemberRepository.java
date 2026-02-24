@@ -1,34 +1,13 @@
 package com.springboot.jpa_shop.data.repository;
 
-import com.springboot.jpa_shop.data.entity.Member;
-import org.springframework.stereotype.Repository;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
-@Repository
-public class MemberRepository {
-	
-	    @PersistenceContext
-	    EntityManager em;
-	
-	    public void save(Member saveMember) {
-	        em.persist(saveMember);
-	    }
-	
-	    public Member findOne(Long id) {
-	    	return em.find(Member.class, id);
-	    }
-	
-	    public List<Member> findAll() {
-	        return em.createQuery("select m from Member m", Member.class)
-	                .getResultList();
-	    }
-	
-	    public List<Member> findByName(String username) {
-	        return em.createQuery("select m from Member m where m.username = :username", Member.class)
-	                .setParameter("username", username)
-	                .getResultList();
-	    }
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.springboot.jpa_shop.data.entity.Member;
+
+public interface MemberRepository extends JpaRepository<Member, Long> {
+
+    List<Member> findByUsername(String username);
 }
+

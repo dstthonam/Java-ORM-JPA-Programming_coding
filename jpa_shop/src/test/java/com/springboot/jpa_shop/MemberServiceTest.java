@@ -29,8 +29,10 @@ public class MemberServiceTest {
 		        //When
 		        Long saveMemberSevice = memberService.join(member);
 
+		        Member findMember = memberRepository.findById(saveMemberSevice)
+		        														.orElseThrow(() -> new IllegalArgumentException("회원이 없습니다."));
 		        //Then
-		        assertEquals(member, memberRepository.findOne(saveMemberSevice));
+		        assertEquals(member, findMember);
 			} catch (Exception e) {
 				e.printStackTrace(); // error log check
 			}

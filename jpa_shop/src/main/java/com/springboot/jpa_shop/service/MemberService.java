@@ -24,7 +24,7 @@ public class MemberService {
 	    }
 	
 	    private void validateDuplicateMember(Member member) {
-	        List<Member> findMembers = memberRepository.findByName(member.getUsername());
+	        List<Member> findMembers = memberRepository.findByUsername(member.getUsername());
 
 	        if (!findMembers.isEmpty()) {
 	            throw new IllegalStateException("이미 존재하는 회원입니다.");
@@ -37,6 +37,7 @@ public class MemberService {
 	    }
 	
 	    public Member findOne(Long memberId) {
-	        return memberRepository.findOne(memberId);
+	        return memberRepository.findById(memberId)
+								.orElseThrow(() -> new IllegalArgumentException("회원이 없습니다."));
 	    }
 }

@@ -24,7 +24,8 @@ public class ItemService {
     }
 
     public Item findOne(Long itemId) {
-        return itemRepository.findOne(itemId);
+        return itemRepository.findById(itemId)
+							.orElseThrow(() -> new IllegalArgumentException("물품이 없습니다."));
     }
     
 }
